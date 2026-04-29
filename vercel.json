@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    { "src": "/api/price(.*)", "dest": "/api/price.js" },
+    { "src": "/api/tokens(.*)", "dest": "/api/tokens.js" },
+    { "src": "/api/prediction(.*)", "dest": "/api/prediction.js" },
+    { "src": "/api/swap(.*)", "dest": "/api/swap.js" },
+    { "src": "/api/trigger(.*)", "dest": "/api/trigger.js" },
+    { "src": "/api/recurring(.*)", "dest": "/api/recurring.js" },
+    { "src": "/api/rpc(.*)", "dest": "/api/rpc.js" },
+    { "src": "/api/lend(.*)", "dest": "/api/lend.js" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

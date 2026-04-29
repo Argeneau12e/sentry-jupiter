@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// Routes through our proxy server to avoid CORS
+const API_BASE = process.env.REACT_APP_API_BASE
+  || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001');
+
 const fetchRPC = async (method, params) => {
-  const response = await fetch('http://localhost:3001/rpc', {
+  const response = await fetch(`${API_BASE}/rpc`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

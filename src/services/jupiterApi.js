@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API_KEY = process.env.REACT_APP_JUPITER_API_KEY;
-const BASE_URL = process.env.REACT_APP_API_BASE || 'http://localhost:3001';
+const BASE_URL = process.env.REACT_APP_API_BASE
+  || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001');
 
 export const MINTS = {
   SOL: 'So11111111111111111111111111111111111111112',
