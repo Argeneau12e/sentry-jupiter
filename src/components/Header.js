@@ -1,5 +1,4 @@
 import React from 'react';
-import { useWallet } from '../hooks/useWalletAuth';
 
 const Header = ({ lastUpdated, onAddToken, predictionSentiment, tickerTokens = [], activeTab, onTabChange, wallet }) => {
   const { connected, publicKey, connect, disconnect } = wallet || {};

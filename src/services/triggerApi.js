@@ -1,4 +1,3 @@
-import { VersionedTransaction } from '@solana/web3.js';
 
 const API_BASE = process.env.REACT_APP_API_BASE
   || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001');

@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getSwapQuote, searchTokens, MINTS } from '../services/jupiterApi';
 
-const formatPrice = (price) => {
-  if (price === null || price === undefined) return '—';
-  if (price < 0.001) return `$${price.toFixed(6)}`;
-  if (price < 1) return `$${price.toFixed(4)}`;
-  return `$${price.toFixed(2)}`;
-};
 
 const POPULAR_TOKENS = [
   { mint: MINTS.SOL, symbol: 'SOL', name: 'Solana' },
