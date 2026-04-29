@@ -1,0 +1,57 @@
+.app {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+/* Score glow animations */
+@keyframes scoreGlowGreen {
+  0%, 100% { box-shadow: 0 0 8px rgba(200, 245, 89, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(200, 245, 89, 0.6); }
+}
+@keyframes scoreGlowYellow {
+  0%, 100% { box-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+}
+@keyframes scoreGlowRed {
+  0%, 100% { box-shadow: 0 0 8px rgba(248, 113, 113, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(248, 113, 113, 0.6); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Ticker bar */
+.ticker-bar {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-content {
+  display: flex;
+  animation: tickerScroll 30s linear infinite;
+}

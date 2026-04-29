@@ -1,0 +1,73 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0a0b0d;
+  color: #e8eaed;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  --bg-primary: #0a0b0d;
+  --bg-secondary: #0f1114;
+  --bg-card: #13151a;
+  --bg-card-hover: #1a1d24;
+  --bg-input: #0f1114;
+  --border: #1f2128;
+  --border-subtle: #16181e;
+  --text-primary: #e8eaed;
+  --text-secondary: #9ca3af;
+  --text-muted: #4b5563;
+  --accent-green: #c8f559;
+  --accent-green-dim: rgba(200, 245, 89, 0.15);
+  --accent-green-glow: rgba(200, 245, 89, 0.3);
+  --accent-red: #f87171;
+  --accent-red-dim: rgba(248, 113, 113, 0.12);
+  --accent-yellow: #fbbf24;
+  --accent-yellow-dim: rgba(251, 191, 36, 0.12);
+  --accent-blue: #60a5fa;
+  --accent-purple: #a78bfa;
+  --glass-bg: rgba(19, 21, 26, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-blur: blur(20px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2a2d36; }
+
+/* Wallet adapter overrides */
+.wallet-adapter-modal-wrapper {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16px !important;
+}
+.wallet-adapter-modal-title {
+  color: var(--text-primary) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+.wallet-adapter-button {
+  background: var(--accent-green) !important;
+  color: #000 !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  height: 44px !important;
+}
+.wallet-adapter-button:hover {
+  opacity: 0.9 !important;
+}
+.wallet-adapter-modal-overlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+}
+.wallet-adapter-modal-list li {
+  border-radius: 8px !important;
+}
