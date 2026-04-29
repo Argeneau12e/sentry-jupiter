@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWallet, useTriggerAuth } from '../hooks/useWalletAuth';
+import { useTriggerAuth } from '../hooks/useWalletAuth';
 import { craftDeposit, placeOCOOrder, placeSingleOrder, getOrCreateVault } from '../services/triggerApi';
 import { createDCAOrder } from '../services/recurringApi';
 import { VersionedTransaction } from '@solana/web3.js';
@@ -152,7 +152,7 @@ const StrategyTimeline = ({ token, tpPrice, slPrice, dcaAmount, dcaCycles, cycle
 
 const StrategiesTab = ({ enrichedTokens, wallet }) => {
   const { connected, connect } = wallet;
-  const { jwt, authLoading, authError, getOrRefreshJwt } = useTriggerAuth(wallet);
+  const { getOrRefreshJwt } = useTriggerAuth(wallet);
 
   // Shared state
   const [activeStrategy, setActiveStrategy] = useState('oco');

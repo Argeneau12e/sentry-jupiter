@@ -215,7 +215,7 @@ const TokenCard = ({ token, onSelect, isSelected }) => {
 
 const TokenDetailPanel = ({ token, onClose }) => {
   if (!token) return null;
-  const { sentry, threat, audit, stats24h } = token;
+  const { threat, audit, stats24h } = token;
 
   return (
     <div style={{

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import PortfolioTab from './components/PortfolioTab';
 import SwapTab from './components/SwapTab';
@@ -20,16 +20,17 @@ import {
 } from './services/jupiterApi';
 import './App.css';
 
+  const DEFAULT_WATCHLIST = [MINTS.SOL, MINTS.JUP, MINTS.BONK, MINTS.WIF];
+
 function App() {
   const wallet = useWallet();
-  const { connected, publicKey } = wallet;
+  const { publicKey } = wallet;
 
   // Wallet balances from chain
-  const { balances, loading: balancesLoading } = useWalletBalances(publicKey);
+  const { balances } = useWalletBalances(publicKey);
 
   // App state
   const [activeTab, setActiveTab] = useState('portfolio');
-  const DEFAULT_WATCHLIST = [MINTS.SOL, MINTS.JUP, MINTS.BONK, MINTS.WIF];
   const [watchlist, setWatchlist] = useState(DEFAULT_WATCHLIST);
   const [enrichedTokens, setEnrichedTokens] = useState([]);
   const [loading, setLoading] = useState(true);

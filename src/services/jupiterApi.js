@@ -174,11 +174,9 @@ export const calculateThreatLevel = (tokenData) => {
     organicScore,
     organicScoreVelocity,
     priceChange24h,
-    holderCount,
     audit,
     predictionSentiment,
     liquidity,
-    stats24h,
   } = tokenData;
 
   let threatPoints = 0;
