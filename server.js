@@ -12,6 +12,35 @@ const HELIUS_RPC = process.env.REACT_APP_HELIUS_RPC;
 
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
+app.use('/api/price', jupiterProxy('/price'));
+app.use('/api/tokens', jupiterProxy('/tokens'));
+app.use('/api/swap', jupiterProxy('/swap'));
+app.use('/api/trigger', jupiterProxy('/trigger'));
+app.use('/api/recurring', jupiterProxy('/recurring'));
+app.use('/api/prediction', jupiterProxy('/prediction'));
+app.post('/api/rpc', async (req, res) => {
+  if (!HELIUS_RPC) return res.status(500).json({ error: 'Helius RPC not configured' });
+  try {
+    const response = await axios.post(HELIUS_RPC, req.body, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error?.response?.status || 500).json(error?.response?.data || { error: error.message });
+  }
+});
+app.get('/api/lend', async (req, res) => {
+  try {
+    const response = await axios.get(`${JUPITER_BASE}/tokens/v2/search`, {
+      params: { query: 'USDC,SOL,USDT' },
+      headers: { 'x-api-key': API_KEY },
+    });
+    const tokens = response.data || [];
+    res.json(tokens.filter((t) => t.apy && Object.keys(t.apy).length > 0));
+  } catch (error) {
+    res.status(500).json([]);
+  }
+});
 
 console.log('API Key loaded:', API_KEY ? `${API_KEY.slice(0, 8)}...` : 'MISSING');
 console.log('Helius RPC loaded:', HELIUS_RPC ? 'YES' : 'MISSING');

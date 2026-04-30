@@ -1,7 +1,7 @@
 
 const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:3001'
-  : '';
+  : '/api';
 const TRIGGER_BASE = `${API_BASE}/trigger/v2`;
 const API_KEY = process.env.REACT_APP_JUPITER_API_KEY;
 

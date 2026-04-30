@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:3001'
-  : '';
+  : '/api';
 
 const fetchRPC = async (method, params) => {
   const response = await fetch(`${API_BASE}/rpc`, {

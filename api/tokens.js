@@ -6,13 +6,15 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const subPath = req.url || '';
+  const url = req.url || '';
+  const subPath = url.includes('?') ? url.split('?')[0] : url;
   const targetUrl = `https://api.jup.ag/tokens${subPath}`;
 
   try {
     const response = await axios({
       method: req.method,
       url: targetUrl,
+      params: req.query,
       headers: { 'x-api-key': process.env.REACT_APP_JUPITER_API_KEY },
       data: req.body,
     });

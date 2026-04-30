@@ -1,6 +1,6 @@
 const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:3001'
-  : '';
+  : '/api';
 const RECURRING_BASE = `${API_BASE}/recurring/v1`;
 const API_KEY = process.env.REACT_APP_JUPITER_API_KEY;
 
