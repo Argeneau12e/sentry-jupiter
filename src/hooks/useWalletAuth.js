@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import bs58 from 'bs58';
-import { VersionedTransaction } from '@solana/web3.js';
 
 export const useWallet = () => {
   const [connected, setConnected] = useState(false);
