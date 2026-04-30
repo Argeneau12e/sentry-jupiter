@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_BASE = process.env.REACT_APP_API_BASE
-  || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001');
+const API_BASE = process.env.REACT_APP_API_BASE !== undefined
+  ? process.env.REACT_APP_API_BASE
+  : (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001');
 
 const fetchRPC = async (method, params) => {
   const response = await fetch(`${API_BASE}/rpc`, {

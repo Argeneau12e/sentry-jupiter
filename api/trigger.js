@@ -6,11 +6,13 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
+  const subPath = req.url || '';
+  const targetUrl = `https://api.jup.ag/trigger${subPath}`;
+
   try {
     const response = await axios({
       method: req.method,
-      url: `https://api.jup.ag/trigger${req.url}`,
-      params: req.query,
+      url: targetUrl,
       headers: {
         'x-api-key': process.env.REACT_APP_JUPITER_API_KEY,
         ...(req.headers.authorization ? { Authorization: req.headers.authorization } : {}),
@@ -19,6 +21,8 @@ module.exports = async (req, res) => {
     });
     res.json(response.data);
   } catch (error) {
-    res.status(error?.response?.status || 500).json(error?.response?.data || { error: error.message });
+    res.status(error?.response?.status || 500).json(
+      error?.response?.data || { error: error.message }
+    );
   }
 };

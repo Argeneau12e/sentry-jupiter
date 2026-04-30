@@ -7,17 +7,21 @@
       "config": {
         "distDir": "build"
       }
+    },
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/api/price(.*)", "dest": "/api/price.js" },
-    { "src": "/api/tokens(.*)", "dest": "/api/tokens.js" },
-    { "src": "/api/prediction(.*)", "dest": "/api/prediction.js" },
-    { "src": "/api/swap(.*)", "dest": "/api/swap.js" },
-    { "src": "/api/trigger(.*)", "dest": "/api/trigger.js" },
-    { "src": "/api/recurring(.*)", "dest": "/api/recurring.js" },
-    { "src": "/api/rpc(.*)", "dest": "/api/rpc.js" },
-    { "src": "/api/lend(.*)", "dest": "/api/lend.js" },
+    { "src": "/price/(.*)", "dest": "/api/price.js" },
+    { "src": "/tokens/(.*)", "dest": "/api/tokens.js" },
+    { "src": "/prediction/(.*)", "dest": "/api/prediction.js" },
+    { "src": "/swap/(.*)", "dest": "/api/swap.js" },
+    { "src": "/trigger/(.*)", "dest": "/api/trigger.js" },
+    { "src": "/recurring/(.*)", "dest": "/api/recurring.js" },
+    { "src": "/rpc", "dest": "/api/rpc.js" },
+    { "src": "/lend/(.*)", "dest": "/api/lend.js" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
 }
