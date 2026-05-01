@@ -1,324 +1,161 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { searchTokens } from '../services/jupiterApi';
 
 const AddTokenModal = ({ onAdd, onClose, existingMints }) => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [searching, setSearching] = useState(false);
-  const [searchError, setSearchError] = useState(null);
-  const inputRef = useRef(null);
-  const debounceRef = useRef(null);
 
-  // Focus input on mount
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  // Close on Escape key
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
-
-  // Debounced search
   useEffect(() => {
     if (!query.trim()) {
-      setResults([]);
-      setSearchError(null);
+      setSearchResults([]);
       return;
     }
-
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(async () => {
+    const timer = setTimeout(async () => {
       setSearching(true);
-      setSearchError(null);
-      try {
-        const data = await searchTokens(query.trim());
-        setResults(data.slice(0, 8));
-      } catch (err) {
-        setSearchError('Search failed. Check your API key.');
-        setResults([]);
-      } finally {
-        setSearching(false);
-      }
+      const results = await searchTokens(query);
+      setSearchResults(results.slice(0, 6));
+      setSearching(false);
     }, 400);
-
-    return () => clearTimeout(debounceRef.current);
+    return () => clearTimeout(timer);
   }, [query]);
 
-  const handleAdd = (mint) => {
-    if (existingMints.includes(mint)) return;
-    onAdd(mint);
-  };
-
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        onClick={onClose}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.7)',
-          zIndex: 200,
-          backdropFilter: 'blur(4px)',
-        }}
-      />
-
-      {/* Modal */}
-      <div style={{
+    <div
+      style={{
         position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 201,
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border)',
-        borderRadius: '16px',
-        width: '480px',
-        maxWidth: '90vw',
-        maxHeight: '80vh',
+        inset: 0,
+        background: 'rgba(0, 0, 0, 0.8)',
         display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}>
-
-        {/* Modal header */}
-        <div style={{
-          padding: '20px 24px',
-          borderBottom: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-          <div>
-            <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>
-              Add Token to Watchlist
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
-              Search by name, symbol, or paste a mint address
-            </div>
-          </div>
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 300,
+        backdropFilter: 'blur(8px)',
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-xl)',
+          padding: 'var(--space-6)',
+          width: '500px',
+          maxWidth: '90%',
+          maxHeight: '80vh',
+          overflow: 'auto',
+          backdropFilter: 'var(--glass-blur)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-5)' }}>
+          <h2 style={{ fontSize: 'var(--text-h3)', fontWeight: '700', color: 'var(--text-primary)' }}>
+            Add Token
+          </h2>
           <button
             onClick={onClose}
             style={{
               background: 'transparent',
               border: '1px solid var(--border)',
-              borderRadius: '6px',
-              padding: '4px 10px',
+              borderRadius: 'var(--radius-md)',
+              padding: '6px 12px',
               color: 'var(--text-muted)',
-              fontSize: '16px',
               cursor: 'pointer',
-              lineHeight: 1,
+              fontSize: 'var(--text-lg)',
             }}
           >
-            x
+            ×
           </button>
         </div>
 
-        {/* Search input */}
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border)' }}>
-          <div style={{ position: 'relative' }}>
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search tokens... e.g. SOL, BONK, or mint address"
-              style={{
-                width: '100%',
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--border)',
-                borderRadius: '8px',
-                padding: '10px 14px',
-                color: 'var(--text-primary)',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color 0.15s ease',
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = 'var(--accent-purple)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'var(--border)';
-              }}
-            />
-            {searching && (
-              <div style={{
-                position: 'absolute',
-                right: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                width: '14px',
-                height: '14px',
-                border: '2px solid var(--border)',
-                borderTopColor: 'var(--accent-purple)',
-                borderRadius: '50%',
-                animation: 'spin 0.8s linear infinite',
-              }} />
-            )}
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search by name, symbol, or mint address..."
+          style={{
+            width: '100%',
+            background: 'var(--bg-input)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            padding: 'var(--space-3) var(--space-4)',
+            color: 'var(--text-primary)',
+            fontSize: 'var(--text-base)',
+            outline: 'none',
+            boxSizing: 'border-box',
+          }}
+        />
+
+        {searching && (
+          <div style={{ padding: 'var(--space-4)', textAlign: 'center', color: 'var(--text-muted)' }}>
+            Searching...
           </div>
-          <style>{`
-            @keyframes spin {
-              to { transform: translateY(-50%) rotate(360deg); }
-            }
-          `}</style>
-        </div>
+        )}
 
-        {/* Results */}
-        <div style={{ overflowY: 'auto', flex: 1 }}>
-          {searchError && (
-            <div style={{
-              padding: '16px 24px',
-              color: 'var(--accent-red)',
-              fontSize: '13px',
-            }}>
-              {searchError}
-            </div>
-          )}
-
-          {!searching && !searchError && results.length === 0 && query.trim() && (
-            <div style={{
-              padding: '32px 24px',
-              textAlign: 'center',
-              color: 'var(--text-muted)',
-              fontSize: '14px',
-            }}>
-              No tokens found for "{query}"
-            </div>
-          )}
-
-          {!query.trim() && (
-            <div style={{
-              padding: '32px 24px',
-              textAlign: 'center',
-              color: 'var(--text-muted)',
-              fontSize: '14px',
-            }}>
-              Start typing to search any Solana token
-            </div>
-          )}
-
-          {results.map((token) => {
-            const alreadyAdded = existingMints.includes(token.id);
-
+        <div style={{ marginTop: 'var(--space-4)' }}>
+          {searchResults.map((token) => {
+            const isExisting = existingMints.includes(token.id);
             return (
               <div
                 key={token.id}
+                onClick={() => !isExisting && onAdd(token.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px 24px',
-                  borderBottom: '1px solid var(--border)',
-                  cursor: alreadyAdded ? 'default' : 'pointer',
-                  opacity: alreadyAdded ? 0.5 : 1,
-                  transition: 'background 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!alreadyAdded) e.currentTarget.style.background = 'var(--bg-card-hover)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
+                  gap: 'var(--space-3)',
+                  padding: 'var(--space-3)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: isExisting ? 'not-allowed' : 'pointer',
+                  transition: 'all var(--transition-fast)',
+                  opacity: isExisting ? 0.5 : 1,
+                  background: 'rgba(0,0,0,0.2)',
+                  marginBottom: 'var(--space-2)',
                 }}
               >
-                {/* Token info */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {token.icon ? (
-                    <img
-                      src={token.icon}
-                      alt={token.symbol}
-                      style={{ width: '36px', height: '36px', borderRadius: '50%' }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  ) : (
-                    <div style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '50%',
+                {token.icon || token.logoURI ? (
+                  <img
+                    src={token.icon || token.logoURI}
+                    alt={token.symbol}
+                    style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-full)' }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: 'var(--radius-full)',
                       background: 'var(--bg-card-hover)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '14px',
+                      fontSize: '13px',
                       fontWeight: '700',
                       color: 'var(--text-secondary)',
-                    }}>
-                      {token.symbol?.charAt(0) || '?'}
-                    </div>
-                  )}
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>
-                        {token.symbol}
-                      </span>
-                      {token.isVerified && (
-                        <span style={{
-                          fontSize: '10px',
-                          background: 'rgba(59, 130, 246, 0.15)',
-                          color: 'var(--accent-blue)',
-                          padding: '1px 5px',
-                          borderRadius: '3px',
-                          fontWeight: '600',
-                        }}>
-                          VERIFIED
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '1px' }}>
-                      {token.name}
-                    </div>
-                    <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '1px', fontFamily: 'monospace' }}>
-                      {token.id?.slice(0, 12)}...
-                    </div>
-                  </div>
-                </div>
-
-                {/* Organic score + add button */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {token.organicScore !== undefined && token.organicScore !== null && (
-                    <div style={{
-                      fontSize: '11px',
-                      color: 'var(--text-muted)',
-                      textAlign: 'right',
-                    }}>
-                      <div style={{ color: 'var(--text-secondary)', fontWeight: '600' }}>
-                        {token.organicScore.toFixed(0)}
-                      </div>
-                      <div>organic</div>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => handleAdd(token.id)}
-                    disabled={alreadyAdded}
-                    style={{
-                      background: alreadyAdded
-                        ? 'var(--bg-card-hover)'
-                        : 'linear-gradient(135deg, var(--accent-purple), var(--accent-blue))',
-                      border: 'none',
-                      borderRadius: '6px',
-                      padding: '7px 14px',
-                      color: alreadyAdded ? 'var(--text-muted)' : '#fff',
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      cursor: alreadyAdded ? 'not-allowed' : 'pointer',
-                      whiteSpace: 'nowrap',
                     }}
                   >
-                    {alreadyAdded ? 'Added' : 'Add'}
-                  </button>
+                    {token.symbol?.charAt(0)}
+                  </div>
+                )}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--text-primary)' }}>
+                    {token.symbol}
+                  </div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                    {token.name}
+                  </div>
                 </div>
+                {isExisting ? (
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>Already added</span>
+                ) : (
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--success)' }}>Add</span>
+                )}
               </div>
             );
           })}
         </div>
-
       </div>
-    </>
+    </div>
   );
 };
 

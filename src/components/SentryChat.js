@@ -13,7 +13,7 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `I'm Sentry, your AI DeFi guardian. I have live data on ${tokens.length} token${tokens.length !== 1 ? 's' : ''} in your portfolio. Ask me anything — what's risky, what to accumulate, what the markets are saying.`,
+      content: `I'm Sentry, your AI DeFi guardian. I have live data on ${tokens.length} token${tokens.length !== 1 ? 's' : ''} in your portfolio. Ask me anything.`,
       timestamp: new Date(),
     },
   ]);
@@ -29,17 +29,6 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
     }
   }, [open, messages]);
 
-  // Update greeting when token count changes
-  useEffect(() => {
-    if (tokens.length > 0) {
-      setMessages([{
-        role: 'assistant',
-        content: `I'm Sentry, your AI DeFi guardian. I have live data on ${tokens.length} token${tokens.length !== 1 ? 's' : ''} in your portfolio. Ask me anything — what's risky, what to accumulate, what the markets are saying.`,
-        timestamp: new Date(),
-      }]);
-    }
-  }, [tokens.length]);
-
   const handleSend = async (question) => {
     const q = question || input.trim();
     if (!q || loading) return;
@@ -50,7 +39,7 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
     setLoading(true);
 
     const historyForAPI = messages
-      .slice(1) // skip greeting
+      .slice(1)
       .map((m) => ({ role: m.role, content: m.content }));
 
     const answer = await askSentry(q, tokens, predictionSentiment, predictionMarkets, historyForAPI);
@@ -75,13 +64,7 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
   return (
     <>
       {/* Floating button */}
-      <div style={{
-        position: 'fixed',
-        bottom: '24px',
-        right: '24px',
-        zIndex: 200,
-      }}>
-        {/* Alert badge */}
+      <div style={{ position: 'fixed', bottom: 'var(--space-6)', right: 'var(--space-6)', zIndex: 200 }}>
         {(criticalCount > 0 || highCount > 0) && !open && (
           <div style={{
             position: 'absolute',
@@ -90,7 +73,7 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
             width: '20px',
             height: '20px',
             borderRadius: '50%',
-            background: criticalCount > 0 ? '#ef4444' : '#f97316',
+            background: criticalCount > 0 ? 'var(--danger)' : '#f97316',
             border: '2px solid #0a0b0d',
             display: 'flex',
             alignItems: 'center',
@@ -109,16 +92,16 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
           style={{
             width: '56px',
             height: '56px',
-            borderRadius: '50%',
-            background: open ? 'var(--bg-card)' : '#c8f559',
-            border: open ? '1px solid rgba(255,255,255,0.1)' : 'none',
+            borderRadius: 'var(--radius-full)',
+            background: open ? 'var(--bg-card)' : 'var(--success)',
+            border: open ? '1px solid var(--glass-border)' : 'none',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '22px',
             boxShadow: open ? 'none' : '0 4px 20px rgba(200,245,89,0.4)',
-            transition: 'all 0.2s ease',
+            transition: 'all var(--transition-fast)',
           }}
         >
           {open ? '×' : 'S'}
@@ -129,13 +112,13 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
       {open && (
         <div style={{
           position: 'fixed',
-          bottom: '92px',
-          right: '24px',
+          bottom: 'calc(100% + 16px)',
+          right: 'var(--space-6)',
           width: '380px',
           height: '520px',
           background: '#13151a',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '16px',
+          border: '1px solid var(--glass-border)',
+          borderRadius: 'var(--radius-xl)',
           zIndex: 199,
           display: 'flex',
           flexDirection: 'column',
@@ -143,31 +126,22 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
           animation: 'slideUp 0.2s ease',
           overflow: 'hidden',
         }}>
-          <style>{`
-            @keyframes slideUp {
-              from { opacity: 0; transform: translateY(12px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: 0.5; }
-            }
-          `}</style>
+          <style>{`@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
 
           {/* Header */}
           <div style={{
-            padding: '16px 20px',
+            padding: 'var(--space-4)',
             borderBottom: '1px solid rgba(255,255,255,0.06)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: 'var(--space-3)',
             background: 'rgba(200,245,89,0.04)',
           }}>
             <div style={{
               width: '32px',
               height: '32px',
-              borderRadius: '50%',
-              background: '#c8f559',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--success)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -179,22 +153,22 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
               S
             </div>
             <div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: '700', color: 'var(--text-primary)' }}>
                 Sentry AI
               </div>
-              <div style={{ fontSize: '11px', color: '#c8f559' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--success)' }}>
                 Live data from Jupiter APIs
               </div>
             </div>
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
               <div style={{
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
-                background: '#c8f559',
-                boxShadow: '0 0 6px #c8f559',
+                background: 'var(--success)',
+                boxShadow: '0 0 6px var(--success)',
               }} />
-              <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>online</span>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>online</span>
             </div>
           </div>
 
@@ -202,10 +176,10 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
           <div style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '16px',
+            padding: 'var(--space-4)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px',
+            gap: 'var(--space-3)',
           }}>
             {messages.map((msg, i) => (
               <div key={i} style={{
@@ -214,26 +188,26 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
               }}>
                 <div style={{
                   maxWidth: '85%',
-                  padding: '10px 14px',
+                  padding: 'var(--space-3)',
                   borderRadius: msg.role === 'user'
-                    ? '12px 12px 2px 12px'
-                    : '12px 12px 12px 2px',
+                    ? 'var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg)'
+                    : 'var(--radius-lg)',
                   background: msg.role === 'user'
                     ? 'rgba(200,245,89,0.12)'
                     : 'rgba(255,255,255,0.04)',
                   border: `1px solid ${msg.role === 'user' ? 'rgba(200,245,89,0.2)' : 'rgba(255,255,255,0.06)'}`,
                 }}>
                   <div style={{
-                    fontSize: '13px',
+                    fontSize: 'var(--text-sm)',
                     color: 'var(--text-primary)',
                     lineHeight: '1.6',
                   }}>
                     {msg.content}
                   </div>
                   <div style={{
-                    fontSize: '10px',
+                    fontSize: 'var(--text-xs)',
                     color: 'var(--text-muted)',
-                    marginTop: '4px',
+                    marginTop: 'var(--space-2)',
                     textAlign: msg.role === 'user' ? 'right' : 'left',
                   }}>
                     {formatTime(msg.timestamp)}
@@ -245,20 +219,20 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
             {loading && (
               <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <div style={{
-                  padding: '10px 16px',
-                  borderRadius: '12px 12px 12px 2px',
+                  padding: 'var(--space-3)',
+                  borderRadius: 'var(--radius-lg)',
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.06)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
+                  gap: 'var(--space-2)',
                 }}>
                   {[0, 1, 2].map((i) => (
                     <div key={i} style={{
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: '#c8f559',
+                      background: 'var(--success)',
                       animation: `pulse 1s ease-in-out ${i * 0.2}s infinite`,
                     }} />
                   ))}
@@ -268,13 +242,13 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggested questions — show only on first message */}
+          {/* Suggested questions */}
           {messages.length === 1 && (
             <div style={{
-              padding: '0 16px 12px',
+              padding: '0 var(--space-4) var(--space-3)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '6px',
+              gap: 'var(--space-2)',
             }}>
               {SUGGESTED_QUESTIONS.slice(0, 3).map((q) => (
                 <button
@@ -283,18 +257,18 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
                   style={{
                     background: 'rgba(255,255,255,0.03)',
                     border: '1px solid rgba(255,255,255,0.06)',
-                    borderRadius: '8px',
-                    padding: '8px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    padding: 'var(--space-2) var(--space-3)',
                     color: 'var(--text-secondary)',
-                    fontSize: '11px',
+                    fontSize: 'var(--text-xs)',
                     cursor: 'pointer',
                     textAlign: 'left',
-                    transition: 'all 0.15s ease',
+                    transition: 'all var(--transition-fast)',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = 'rgba(200,245,89,0.06)';
                     e.currentTarget.style.borderColor = 'rgba(200,245,89,0.2)';
-                    e.currentTarget.style.color = '#c8f559';
+                    e.currentTarget.style.color = 'var(--success)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
@@ -310,10 +284,10 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
 
           {/* Input */}
           <div style={{
-            padding: '12px 16px',
+            padding: 'var(--space-3) var(--space-4)',
             borderTop: '1px solid rgba(255,255,255,0.06)',
             display: 'flex',
-            gap: '8px',
+            gap: 'var(--space-2)',
           }}>
             <input
               ref={inputRef}
@@ -327,12 +301,12 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
                 flex: 1,
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '8px',
-                padding: '9px 12px',
+                borderRadius: 'var(--radius-md)',
+                padding: '9px var(--space-3)',
                 color: 'var(--text-primary)',
-                fontSize: '13px',
+                fontSize: 'var(--text-sm)',
                 outline: 'none',
-                transition: 'border-color 0.15s ease',
+                transition: 'border-color var(--transition-fast)',
               }}
               onFocus={(e) => e.target.style.borderColor = 'rgba(200,245,89,0.4)'}
               onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
@@ -341,15 +315,15 @@ const SentryChat = ({ tokens, predictionSentiment, predictionMarkets }) => {
               onClick={() => handleSend()}
               disabled={loading || !input.trim()}
               style={{
-                background: input.trim() && !loading ? '#c8f559' : 'rgba(255,255,255,0.06)',
+                background: input.trim() && !loading ? 'var(--success)' : 'rgba(255,255,255,0.06)',
                 border: 'none',
-                borderRadius: '8px',
-                padding: '9px 14px',
-                color: input.trim() && !loading ? '#000' : 'var(--text-muted)',
-                fontSize: '13px',
+                borderRadius: 'var(--radius-md)',
+                padding: '9px var(--space-3)',
+                color: input.trim() && !loading ? 'var(--text-inverse)' : 'var(--text-muted)',
+                fontSize: 'var(--text-sm)',
                 fontWeight: '700',
                 cursor: input.trim() && !loading ? 'pointer' : 'not-allowed',
-                transition: 'all 0.15s ease',
+                transition: 'all var(--transition-fast)',
               }}
             >
               Send

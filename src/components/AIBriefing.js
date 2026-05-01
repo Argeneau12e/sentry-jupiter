@@ -26,32 +26,33 @@ const AIBriefing = ({ tokens, predictionSentiment, predictionMarkets }) => {
     setLoading(false);
   };
 
-  // Generate on first load and when critical tokens change
   useEffect(() => {
     if (tokens.length > 0 && !briefing) {
       generateBriefing();
     }
-  }, [tokens.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [tokens.length]);
 
   if (tokens.length === 0) return null;
 
   return (
-    <div style={{
-      background: `linear-gradient(135deg, ${borderColor}06, rgba(255,255,255,0.01))`,
-      border: `1px solid ${borderColor}25`,
-      borderLeft: `3px solid ${borderColor}`,
-      borderRadius: '12px',
-      padding: '16px 20px',
-      marginBottom: '24px',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+    <div
+      style={{
+        background: `linear-gradient(135deg, ${borderColor}06, rgba(255,255,255,0.01))`,
+        border: `1px solid ${borderColor}25`,
+        borderLeft: `3px solid ${borderColor}`,
+        borderRadius: 'var(--radius-lg)',
+        padding: 'var(--space-4) var(--space-5)',
+        marginBottom: 'var(--space-6)',
+        backdropFilter: 'var(--glass-blur)',
+        WebkitBackdropFilter: 'var(--glass-blur)',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
         <div style={{
           width: '34px',
           height: '34px',
-          borderRadius: '50%',
-          background: '#c8f559',
+          borderRadius: 'var(--radius-full)',
+          background: 'var(--success)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -64,23 +65,27 @@ const AIBriefing = ({ tokens, predictionSentiment, predictionMarkets }) => {
           S
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '6px',
-          }}>
-            <div style={{
-              fontSize: '11px',
-              color: 'var(--text-muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-            }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 'var(--space-2)',
+            }}
+          >
+            <div
+              style={{
+                fontSize: 'var(--text-xs)',
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+            >
               Sentry AI — Portfolio Briefing
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
               {lastGenerated && (
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
                   {lastGenerated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               )}
@@ -90,10 +95,10 @@ const AIBriefing = ({ tokens, predictionSentiment, predictionMarkets }) => {
                 style={{
                   background: 'rgba(200,245,89,0.1)',
                   border: '1px solid rgba(200,245,89,0.2)',
-                  borderRadius: '5px',
+                  borderRadius: 'var(--radius-sm)',
                   padding: '3px 8px',
                   color: '#c8f559',
-                  fontSize: '10px',
+                  fontSize: 'var(--text-xs)',
                   fontWeight: '600',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   opacity: loading ? 0.5 : 1,
@@ -105,35 +110,38 @@ const AIBriefing = ({ tokens, predictionSentiment, predictionMarkets }) => {
           </div>
 
           {loading && !briefing && (
-            <div style={{
-              fontSize: '13px',
-              color: 'var(--text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}>
+            <div
+              style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-2)',
+              }}
+            >
               <div style={{
                 width: '12px',
                 height: '12px',
                 border: '2px solid rgba(255,255,255,0.1)',
-                borderTopColor: '#c8f559',
+                borderTopColor: 'var(--success)',
                 borderRadius: '50%',
                 animation: 'spin 0.8s linear infinite',
                 flexShrink: 0,
               }} />
-              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
               Sentry is analyzing your portfolio...
             </div>
           )}
 
           {briefing && (
-            <div style={{
-              fontSize: '14px',
-              color: 'var(--text-primary)',
-              lineHeight: '1.7',
-              opacity: loading ? 0.5 : 1,
-              transition: 'opacity 0.3s ease',
-            }}>
+            <div
+              style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-primary)',
+                lineHeight: '1.7',
+                opacity: loading ? 0.5 : 1,
+                transition: 'opacity 0.3s ease',
+              }}
+            >
               {briefing}
             </div>
           )}
